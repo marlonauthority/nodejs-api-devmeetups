@@ -21,8 +21,38 @@ class UserController {
 
   // -> Metodo Atualizar
   async update(req, res) {
-    console.log(req.userId);
-    return res.json({ ok: true });
+    // -> Pagamos os campos do body
+    const { email, oldPassword } = req.body;
+    //
+    // -> Buscamos o User usando o primary key
+    const user = await User.findByPk(req.userId);
+    //
+    // -> Caso houver um email e for diferente
+    if (email !== user.email) {
+      const userExists = await User.findOne({
+        where: { email },
+      });
+      // -> Caso exista o email, entra no if
+      if (userExists) {
+        return res.status(400).json({ error: 'Usuário já existe.' });
+      }
+    }
+    //
+    // -> Caso foi informado o campo oldpassword, cairá aqui...
+    // -> Caso a senha Antiga "old" bater com a atual
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Senhas não coincidem' });
+    }
+    //
+    // Se passou pelas verificacoes anteriores, atualize o User
+    const { id, name } = await user.update(req.body);
+    //
+    // -> Retorna os dados repassados
+    return res.json({
+      id,
+      name,
+      email,
+    });
   }
 }
 
