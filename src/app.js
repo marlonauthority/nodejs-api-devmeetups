@@ -1,5 +1,7 @@
 import express from 'express';
 import routes from './routes';
+// -> Chama um loader de models
+import './database';
 
 class App {
   constructor() {
