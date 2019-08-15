@@ -1,13 +1,35 @@
+import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
+  // -> Criacao de Usuario
   async store(req, res) {
+    //
+    // -> Validacao
+    //
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+      password: Yup.string()
+        .required()
+        .min(6),
+    });
+    // -> Verifica se no corpo da requisicao batem com as validacoes do yup
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Erro nas validacões.' });
+    }
+    //
+    // -> Se passou pelas validacoes...
+    //
     // -> Verificar se Existe o Email no DB
     const userExists = await User.findOne({ where: { email: req.body.email } });
     // -> Caso exista o email, entra no if
     if (userExists) {
       return res.status(400).json({ error: 'Usuário já existe.' });
     }
+    //
     // Se passou..
     // -> Cria um User e apenas os dados repassados pelo body
     const { id, name, email } = await User.create(req.body);
@@ -21,6 +43,29 @@ class UserController {
 
   // -> Metodo Atualizar
   async update(req, res) {
+    //
+    // -> Validacao
+    //
+    // no caso do password, caso o user passe o oldpassword o campo password é obrigatorio
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('oldPassword', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      confirmPassword: Yup.string().when('password', (password, field) =>
+        password ? field.required().oneOf([Yup.ref('password')]) : field
+      ),
+    });
+    // -> Verifica se no corpo da requisicao batem com as validacoes do yup
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Erro nas validacões.' });
+    }
+    //
+    // -> Se passou pelas validacoes...
     // -> Pagamos os campos do body
     const { email, oldPassword } = req.body;
     //
