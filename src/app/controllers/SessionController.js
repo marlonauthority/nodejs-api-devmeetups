@@ -1,9 +1,26 @@
 import jwt from 'jsonwebtoken';
+import * as Yup from 'yup';
 import authConfig from '../../config/auth';
 import User from '../models/User';
 
 class SessionController {
   async store(req, res) {
+    //
+    // -> Validacao
+    //
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .email()
+        .required(),
+      password: Yup.string().required(),
+    });
+    // -> Verifica se no corpo da requisicao batem com as validacoes do yup
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Erro nas validacões.' });
+    }
+    //
+    // -> Se passou pelas validacoes..
+    //
     // -> Recebemos email e senha do body
     const { email, password } = req.body;
     // -> Procuramos pelo usuario no DB
