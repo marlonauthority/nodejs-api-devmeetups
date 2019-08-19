@@ -18,7 +18,10 @@ class Database {
     this.connection = new Sequelize(databaseConfig);
     // -> faz um mapeamento de todos os models
     // -> dentro de cada model é chamado a funcao init e repassado a conexao do DB
-    models.map(model => model.init(this.connection));
+    models
+      .map(model => model.init(this.connection))
+      // um segundo map criado para associar model de user com files, porem so é executado no model que existir a funcao "associate"
+      .map(model => model.associate && model.associate(this.connection.models));
   }
 }
 

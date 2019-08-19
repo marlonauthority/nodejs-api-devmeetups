@@ -27,6 +27,13 @@ class User extends Model {
     return this;
   }
 
+  // Relacionamento com Files
+  // -> Cria uma function statica que recebe Models
+  static associate(models) {
+    // Diz que Pertence a..(BelongTo)
+    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+  }
+
   // Verifica a senha recebida bate com a do banco
   // Essa funcao retornará true caso as senhas coincidem
   checkPassword(password) {
