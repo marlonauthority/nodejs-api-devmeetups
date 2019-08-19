@@ -31,7 +31,7 @@ class User extends Model {
   // -> Cria uma function statica que recebe Models
   static associate(models) {
     // Diz que Pertence a..(BelongTo)
-    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
   // Verifica a senha recebida bate com a do banco
