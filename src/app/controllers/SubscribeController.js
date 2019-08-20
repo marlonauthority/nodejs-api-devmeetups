@@ -29,7 +29,7 @@ class SubscribeController {
         user_id: req.userId,
       },
     });
-    // -> se nao for um prestador
+    // -> se ja estiver inscrito..
     if (isSubscribed) {
       return res
         .status(401)
