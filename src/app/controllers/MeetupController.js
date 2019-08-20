@@ -1,10 +1,24 @@
 import * as Yup from 'yup';
 import { isBefore, parseISO } from 'date-fns';
 import Meetup from '../models/Meetup';
+import File from '../models/File';
 
 class MeetupController {
+  // -> Lista Meetups do user
   async index(req, res) {
-    return res.json();
+    const meetups = await Meetup.findAll({
+      where: { user_id: req.userId },
+      order: [['date_hour', 'DESC']],
+      attributes: ['id', 'title', 'description', 'location', 'date_hour'],
+      include: [
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+    return res.json(meetups);
   }
 
   async store(req, res) {
