@@ -3,6 +3,10 @@ import { isBefore, parseISO } from 'date-fns';
 import Meetup from '../models/Meetup';
 
 class MeetupController {
+  async index(req, res) {
+    return res.json();
+  }
+
   async store(req, res) {
     //
     // -> Validacao
