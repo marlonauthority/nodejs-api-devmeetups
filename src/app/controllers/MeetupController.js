@@ -89,6 +89,27 @@ class MeetupController {
 
     return res.json(meetup);
   }
+
+  // Delete
+  async delete(req, res) {
+    // -> Pega o id dos parametros e faz uma busca no db
+    const meetup = await Meetup.findByPk(req.params.id);
+    // -> Checagem se o usuario do meetup é o mesmo que vem da requicicao, ou seja só o dono do meetup pode alterar
+    if (meetup.user_id !== req.userId) {
+      return res.json(
+        'Não é possível cancelar Meetups que não foram criados por você.'
+      );
+    }
+    // -> Ja aconteceu?
+    if (isBefore(meetup.date_hour, new Date())) {
+      return res.status(400).json({
+        error: 'Meetups que já aconteceram não podem ser cancelados.',
+      });
+    }
+    // -> se chegou aate aqui
+    await meetup.destroy();
+    return res.send('Deleted');
+  }
 }
 
 export default new MeetupController();
