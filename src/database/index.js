@@ -2,10 +2,11 @@ import Sequelize from 'sequelize';
 import User from '../app/models/User';
 import File from '../app/models/File';
 import Meetup from '../app/models/Meetup';
+import Subscribe from '../app/models/Subscribe';
 import databaseConfig from '../config/database';
 
 // Vetor de models que sera repassada no metodo init mais abaixo
-const models = [User, File, Meetup];
+const models = [User, File, Meetup, Subscribe];
 
 class Database {
   // -> Método que inicia automaticamente,
