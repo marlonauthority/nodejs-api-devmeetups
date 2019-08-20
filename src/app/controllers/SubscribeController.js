@@ -22,6 +22,20 @@ class SubscribeController {
     if (isBefore(meetup.date_hour, new Date())) {
       return res.status(400).json({ error: 'Este Meetup já passou.' });
     }
+    // Checagem se ja foi inscrito
+    const isSubscribed = await Subscribers.findOne({
+      where: {
+        meetup_id: req.params.meetupId,
+        user_id: req.userId,
+      },
+    });
+    // -> se nao for um prestador
+    if (isSubscribed) {
+      return res
+        .status(401)
+        .json({ erro: 'Não é possível se inscrever mais de uma vez.' });
+    }
+    // return res.json(isSubscribed);
     // return res.json(meetupId);
     const subscription = await Subscribers.create({
       meetup_id: req.params.meetupId,
