@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { isBefore, parseISO } from 'date-fns';
 import Meetup from '../models/Meetup';
 
 class MeetupController {
@@ -17,16 +18,22 @@ class MeetupController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Erro nas validacões.' });
     }
-    // Pega os dados do corpo da requicicao
-    const { title, description, location, date_hour, banner_id } = req.body;
+    //
+    // -> Checagem de das, datas anteriores nao podem ser criadas
+    // const data1 = parseISO(req.body.date_hour);
+    // const data2 = new Date();
+    // const japassou = isBefore(data1, data2);
+    // return res.json(japassou);
+    //
+    if (isBefore(parseISO(req.body.date_hour), new Date())) {
+      return res
+        .status(400)
+        .json({ error: 'Datas anteriores não são permitidas' });
+    }
 
     // Criar
     const meetup = await Meetup.create({
-      title,
-      description,
-      location,
-      date_hour,
-      banner_id,
+      ...req.body,
       user_id: req.userId,
     });
     return res.json(meetup);
