@@ -1,10 +1,20 @@
 import { isBefore } from 'date-fns';
+import User from '../models/User';
 import Subscribers from '../models/Subscribers';
 import Meetup from '../models/Meetup';
+import Mail from '../../lib/Mail';
 
 class SubscribeController {
   async store(req, res) {
-    const meetup = await Meetup.findByPk(req.params.meetupId);
+    const meetup = await Meetup.findByPk(req.params.meetupId, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
     // -> Se nao encontrar 404..
     if (!meetup) {
       return res.status(404).json({ error: 'Meetup não existe.' });
@@ -72,6 +82,14 @@ class SubscribeController {
       meetup_id: req.params.meetupId,
       user_id: req.userId,
     });
+
+    // Enviamos um email
+    await Mail.sendMail({
+      to: `${meetup.user.name} <${meetup.user.email}>`,
+      subject: `Uma nova inscrição foi feita no ${meetup.title}`,
+      text: `Um novo usuário se inscreveu para o Meetup`,
+    });
+    //
     return res.json(subscription);
   }
 }
