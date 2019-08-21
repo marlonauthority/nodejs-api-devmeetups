@@ -1,4 +1,5 @@
-import { isBefore } from 'date-fns';
+import { isBefore, format } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
 import User from '../models/User';
 import Subscribers from '../models/Subscribers';
 import Meetup from '../models/Meetup';
@@ -6,6 +7,10 @@ import Mail from '../../lib/Mail';
 
 class SubscribeController {
   async store(req, res) {
+    const user = await User.findByPk(req.userId, {
+      attributes: ['name'],
+    });
+    // return res.json(user);
     const meetup = await Meetup.findByPk(req.params.meetupId, {
       include: [
         {
@@ -87,7 +92,20 @@ class SubscribeController {
     await Mail.sendMail({
       to: `${meetup.user.name} <${meetup.user.email}>`,
       subject: `Uma nova inscrição foi feita no ${meetup.title}`,
-      text: `Um novo usuário se inscreveu para o Meetup`,
+      // text: `Um novo usuário se inscreveu para o Meetup`,
+      template: 'subscribe',
+      context: {
+        owner: meetup.user.name,
+        meetup: meetup.title,
+        user: user.name,
+        date: format(
+          meetup.date_hour,
+          "dd 'de' MMMM 'de' Y', para iniciar às' H'h'",
+          {
+            locale: pt,
+          }
+        ),
+      },
     });
     //
     return res.json(subscription);
