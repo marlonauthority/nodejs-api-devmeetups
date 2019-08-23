@@ -86,7 +86,7 @@ class MeetupController {
     // const dataDB = meetup.date_hour;
     // const before = isBefore(hoje, dataDB);
     // -> Checa no banco de dados
-    if (isBefore(new Date(), meetup.date_hour)) {
+    if (isBefore(meetup.date_hour, new Date())) {
       return res
         .status(400)
         .json({ error: 'Meetups que já aconteceram não devem ser alterados.' });
@@ -95,7 +95,7 @@ class MeetupController {
     if (isBefore(parseISO(req.body.date_hour), new Date())) {
       return res
         .status(400)
-        .json({ error: 'Datas anteriores não são permitidas' });
+        .json({ error: 'Alterar para datas que já passaram não é permitido' });
     }
     // -> Se tudo deu certo ate aqui
     // faz o update pegando os dados do corpo da requisicao
