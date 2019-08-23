@@ -1,9 +1,9 @@
-import { isBefore, format } from 'date-fns';
-import pt from 'date-fns/locale/pt-BR';
+import { isBefore } from 'date-fns';
 import User from '../models/User';
 import Subscribers from '../models/Subscribers';
 import Meetup from '../models/Meetup';
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import CancellationMail from '../jobs/CancellationMail';
 
 class SubscribeController {
   async store(req, res) {
@@ -20,6 +20,7 @@ class SubscribeController {
         },
       ],
     });
+
     // -> Se nao encontrar 404..
     if (!meetup) {
       return res.status(404).json({ error: 'Meetup não existe.' });
@@ -89,23 +90,9 @@ class SubscribeController {
     });
 
     // Enviamos um email
-    await Mail.sendMail({
-      to: `${meetup.user.name} <${meetup.user.email}>`,
-      subject: `Uma nova inscrição foi feita no ${meetup.title}`,
-      // text: `Um novo usuário se inscreveu para o Meetup`,
-      template: 'subscribe',
-      context: {
-        owner: meetup.user.name,
-        meetup: meetup.title,
-        user: user.name,
-        date: format(
-          meetup.date_hour,
-          "dd 'de' MMMM 'de' Y', para iniciar às' H'h'",
-          {
-            locale: pt,
-          }
-        ),
-      },
+    await Queue.add(CancellationMail.key, {
+      meetup,
+      user,
     });
     //
     return res.json(subscription);
