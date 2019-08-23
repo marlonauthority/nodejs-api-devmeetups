@@ -52,6 +52,11 @@ Crie uma rota para listar os meetups em que o usuário logado está inscrito.
 
 Liste apenas meetups que ainda não passaram e ordene meetups mais próximos como primeiros da lista.
 
+### Database usado
+
+- docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+- docker run --name redisbarber -p 6379:6379 -d -t redis:alpine
+
 ---
 
 “Faça seu melhor, mas sempre com prazo de entrega”!
