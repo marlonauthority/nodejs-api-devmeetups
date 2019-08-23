@@ -24,7 +24,14 @@ class MeetupController {
     // faz a busca
     const meetups = await Meetup.findAll({
       where,
-      attributes: ['id', 'title', 'description', 'location', 'date_hour'],
+      attributes: [
+        'id',
+        'title',
+        'description',
+        'location',
+        'date_hour',
+        'past',
+      ],
       // listagem maxima de 10
       limit: 10,
       // a cada 10 por pagina
