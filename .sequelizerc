@@ -8,5 +8,5 @@ const { resolve } = require('path');
   // -> Caminho das Migrations
   'migrations-path': resolve(__dirname, 'src', 'database', 'migrations'),
   // -> Caminho das Seeds
-  'sedders-path': resolve(__dirname, 'src', 'database', 'seeds'),
+  'seeders-path': resolve(__dirname, 'src', 'database', 'seeds'),
 }
