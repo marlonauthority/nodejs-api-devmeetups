@@ -12,3 +12,4 @@ jspm_packages/
 tmp/public/*
 
 tmp/uploads/*
+.DS_Store
