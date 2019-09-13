@@ -57,6 +57,14 @@ Liste apenas meetups que ainda não passaram e ordene meetups mais próximos com
 - docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 - docker run --name redismeetup -p 6379:6379 -d -t redis:alpine
 
+### Seeds
+
+- yarn sequelize db:migrate
+- yarn sequelize db:seed:all
+
+Login user 1: admin@admin.com:123456
+Login user 2: user@user.com:123456
+
 ---
 
 “Faça seu melhor, mas sempre com prazo de entrega”!
