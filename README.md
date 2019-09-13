@@ -55,7 +55,7 @@ Liste apenas meetups que ainda não passaram e ordene meetups mais próximos com
 ### Database usado
 
 - docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
-- docker run --name redisbarber -p 6379:6379 -d -t redis:alpine
+- docker run --name redismeetup -p 6379:6379 -d -t redis:alpine
 
 ---
 
