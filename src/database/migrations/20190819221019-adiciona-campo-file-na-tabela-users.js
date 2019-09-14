@@ -16,7 +16,6 @@ module.exports = {
         // Se o user for deletado, aqui sera null
         onDelete: 'SET NULL',
         allowNull: true,
-        default: 1,
       }
     );
   },
