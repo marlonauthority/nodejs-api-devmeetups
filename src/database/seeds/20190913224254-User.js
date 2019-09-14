@@ -6,7 +6,8 @@ module.exports = {
         {
           name: 'Admin',
           email: 'admin@admin.com',
-          password_hash: 123456,
+          password_hash:
+            '$2a$08$Igg5.N4NyZIYlziMNgkQlekr2D1CHbOltURtRmSKrRoupBOGKMgYq',
           created_at: new Date(),
           updated_at: new Date(),
           avatar_id: '1',
@@ -14,7 +15,8 @@ module.exports = {
         {
           name: 'Jon Doe',
           email: 'user@user.com',
-          password_hash: 123456,
+          password_hash:
+            '$2a$08$Igg5.N4NyZIYlziMNgkQlekr2D1CHbOltURtRmSKrRoupBOGKMgYq',
           created_at: new Date(),
           updated_at: new Date(),
           avatar_id: '1',
