@@ -11,7 +11,7 @@ module.exports = {
         },
         {
           name: 'default2',
-          path: 'https://picsum.photos/940/300',
+          path: 'https://picsum.photos/id/979/940/300',
           created_at: new Date(),
           updated_at: new Date(),
         },

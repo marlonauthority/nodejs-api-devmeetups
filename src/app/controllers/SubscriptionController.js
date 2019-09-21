@@ -3,6 +3,7 @@ import Subscribers from '../models/Subscribers';
 
 import Meetup from '../models/Meetup';
 import User from '../models/User';
+import File from '../models/File';
 
 class SubscriptionController {
   async index(req, res) {
@@ -23,7 +24,15 @@ class SubscriptionController {
           },
           attributes: ['title', 'description', 'location', 'date_hour'],
           order: [['date_hour', 'DESC']],
+          include: [
+            {
+              model: File,
+              as: 'banner',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
         },
+
         {
           model: User,
           as: 'user',
