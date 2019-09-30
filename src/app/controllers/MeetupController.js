@@ -1,6 +1,5 @@
-import * as Yup from 'yup';
 import { Op } from 'sequelize';
-import { isBefore, parseISO, between, startOfDay, endOfDay } from 'date-fns';
+import { isBefore, parseISO, startOfDay, endOfDay } from 'date-fns';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import File from '../models/File';
@@ -56,20 +55,6 @@ class MeetupController {
 
   async store(req, res) {
     //
-    // -> Validacao
-    //
-    const schema = Yup.object().shape({
-      title: Yup.string().required(),
-      description: Yup.string().required(),
-      date_hour: Yup.date().required(),
-      location: Yup.string().required(),
-      banner_id: Yup.number().required(),
-    });
-    // -> Verifica se no corpo da requisicao batem com as validacoes do yup
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Erro nas validacões.' });
-    }
-    //
     // -> Checagem de das, datas anteriores nao podem ser criadas
     // const data1 = parseISO(req.body.date_hour);
     // const data2 = new Date();
@@ -92,19 +77,6 @@ class MeetupController {
 
   // -> EDICAO
   async update(req, res) {
-    // -> Validacao
-    const schema = Yup.object().shape({
-      title: Yup.string(),
-      description: Yup.string(),
-      date_hour: Yup.date(),
-      location: Yup.string(),
-      banner_id: Yup.number(),
-    });
-    // -> Verifica se no corpo da requisicao batem com as validacoes do yup
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Erro nas validacões.' });
-    }
-
     // -> Pega o id dos parametros e faz uma busca no db
     const meetup = await Meetup.findByPk(req.params.id);
 
