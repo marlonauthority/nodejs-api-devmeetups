@@ -1,8 +1,11 @@
 import { Op } from 'sequelize';
 import { isBefore, parseISO, startOfDay, endOfDay } from 'date-fns';
+
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import File from '../models/File';
+
+import Cache from '../../lib/Cache';
 
 class MeetupController {
   // -> Lista Meetups do user
@@ -20,7 +23,15 @@ class MeetupController {
         [Op.between]: [startOfDay(parseDate), endOfDay(parseDate)],
       };
     }
-    // faz a busca
+
+    // primeiro busca no chace
+    const cached = await Cache.get('meetups');
+    // se existir cache
+    if (cached) {
+      return res.json(cached);
+    }
+
+    // faz a busca no DB
     const meetups = await Meetup.findAll({
       where,
       attributes: [
@@ -50,6 +61,9 @@ class MeetupController {
       ],
     });
 
+    // grava a lista no cache
+    await Cache.set('meetups', meetups);
+
     return res.json(meetups);
   }
 
@@ -72,6 +86,12 @@ class MeetupController {
       ...req.body,
       user_id: req.userId,
     });
+
+    // -> caso for um meetup, deve "zerar" a lista do cache
+    if (meetup) {
+      await Cache.invalidate('meetups');
+    }
+
     return res.json(meetup);
   }
 
