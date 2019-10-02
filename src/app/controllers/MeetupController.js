@@ -75,10 +75,7 @@ class MeetupController {
       user_id: req.userId,
     });
 
-    // -> caso for um meetup, deve "zerar" a lista do cache
-    if (meetup) {
-      await Cache.invalidate('meetups');
-    }
+   
 
     return res.json(meetup);
   }
