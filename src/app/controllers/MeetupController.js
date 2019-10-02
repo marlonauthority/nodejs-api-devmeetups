@@ -5,8 +5,6 @@ import Meetup from '../models/Meetup';
 import User from '../models/User';
 import File from '../models/File';
 
-import Cache from '../../lib/Cache';
-
 class MeetupController {
   // -> Lista Meetups do user
   async index(req, res) {
@@ -22,13 +20,6 @@ class MeetupController {
       where.date_hour = {
         [Op.between]: [startOfDay(parseDate), endOfDay(parseDate)],
       };
-    }
-
-    // primeiro busca no chace
-    const cached = await Cache.get('meetups');
-    // se existir cache
-    if (cached) {
-      return res.json(cached);
     }
 
     // faz a busca no DB
@@ -60,9 +51,6 @@ class MeetupController {
         },
       ],
     });
-
-    // grava a lista no cache
-    await Cache.set('meetups', meetups);
 
     return res.json(meetups);
   }
