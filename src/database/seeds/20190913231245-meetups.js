@@ -8,7 +8,7 @@ module.exports = {
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec vehicula turpis. Curabitur ac nunc aliquet, cursus tellus fringilla, hendrerit sem. ',
           location: 'New Camp',
-          date_hour: new Date(),
+          date: new Date(),
           banner_id: 2,
           user_id: 1,
           created_at: new Date(),
@@ -19,7 +19,7 @@ module.exports = {
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec vehicula turpis. Curabitur ac nunc aliquet, cursus tellus fringilla, hendrerit sem. ',
           location: 'New Camp',
-          date_hour: new Date(),
+          date: new Date(),
           banner_id: 2,
           user_id: 2,
           created_at: new Date(),

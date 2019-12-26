@@ -17,7 +17,7 @@ class MeetupController {
       // formata a data hora
       const parseDate = parseISO(date);
       // pega tudo o que tem da data fornecida
-      where.date_hour = {
+      where.date = {
         [Op.between]: [startOfDay(parseDate), endOfDay(parseDate)],
       };
     }
@@ -30,13 +30,14 @@ class MeetupController {
         'title',
         'description',
         'location',
-        'date_hour',
+        'date',
         'past',
       ],
       // listagem maxima de 10
       limit: 10,
       // a cada 10 por pagina
       offset: 10 * page - 10,
+      order:['date'],
       // inclue o banner e o usuario
       include: [
         {
@@ -58,12 +59,12 @@ class MeetupController {
   async store(req, res) {
     //
     // -> Checagem de das, datas anteriores nao podem ser criadas
-    // const data1 = parseISO(req.body.date_hour);
+    // const data1 = parseISO(req.body.date);
     // const data2 = new Date();
     // const japassou = isBefore(data1, data2);
     // return res.json(japassou);
     //
-    if (isBefore(parseISO(req.body.date_hour), new Date())) {
+    if (isBefore(parseISO(req.body.date), new Date())) {
       return res
         .status(400)
         .json({ error: 'Datas anteriores não são permitidas' });
@@ -75,7 +76,7 @@ class MeetupController {
       user_id: req.userId,
     });
 
-   
+
 
     return res.json(meetup);
   }
@@ -93,16 +94,16 @@ class MeetupController {
     }
     // -> Checagem das datas
     // const hoje = new Date();
-    // const dataDB = meetup.date_hour;
+    // const dataDB = meetup.date;
     // const before = isBefore(hoje, dataDB);
     // -> Checa no banco de dados
-    if (isBefore(meetup.date_hour, new Date())) {
+    if (isBefore(meetup.date, new Date())) {
       return res
         .status(400)
         .json({ error: 'Meetups que já aconteceram não devem ser alterados.' });
     }
     // e a data que for passada pelo body tambem nao pode ser antiga
-    if (isBefore(parseISO(req.body.date_hour), new Date())) {
+    if (isBefore(parseISO(req.body.date), new Date())) {
       return res
         .status(400)
         .json({ error: 'Alterar para datas que já passaram não é permitido' });
@@ -125,7 +126,7 @@ class MeetupController {
       );
     }
     // -> Ja aconteceu?
-    if (isBefore(meetup.date_hour, new Date())) {
+    if (isBefore(meetup.date, new Date())) {
       return res.status(400).json({
         error: 'Meetups que já aconteceram não podem ser cancelados.',
       });
