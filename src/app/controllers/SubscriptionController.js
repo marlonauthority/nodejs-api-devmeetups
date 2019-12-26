@@ -14,6 +14,7 @@ class SubscriptionController {
     const subscriptions = await Subscribers.findAll({
       where: { user_id: req.userId },
       // attributes: ['id'],
+      order: [['meetup', 'date', 'ASC']],
       include: [
         {
           model: Meetup,
@@ -21,13 +22,13 @@ class SubscriptionController {
           // onde
           where: {
             // campo date_houw
-            date_hour: {
+            date: {
               // ja passou da data atual
               [Op.gt]: new Date(),
             },
           },
-          attributes: ['title', 'description', 'location', 'date_hour'],
-          order: [['date_hour', 'DESC']],
+          attributes: ['title', 'description', 'location', 'date'],
+
           include: [
             {
               model: File,
@@ -77,11 +78,11 @@ class SubscriptionController {
     }
     // -> Checagem das datas
     // const hoje = new Date();
-    // const dataDB = meetup.date_hour;
+    // const dataDB = meetup.date;
     // const before = isBefore(dataDB, hoje);
     // return res.json({ hoje, dataDB, before });
     // -> Checa no banco de dados
-    if (isBefore(meetup.date_hour, new Date())) {
+    if (isBefore(meetup.date, new Date())) {
       return res.status(400).json({ error: 'Este Meetup já passou.' });
     }
     // Checagem se ja foi inscrito
@@ -112,7 +113,7 @@ class SubscriptionController {
           required: true,
           // onde a data e hora seja a mesma a qual o user esta tentando subscrever
           where: {
-            date_hour: meetup.date_hour,
+            date: meetup.date,
           },
         },
       ],
@@ -148,7 +149,7 @@ class SubscriptionController {
       },
     });
 
-    if (isBefore(cancelmeetup.date_hour, new Date())) {
+    if (isBefore(cancelmeetup.date, new Date())) {
       return res
         .status(400)
         .json({ error: 'Não é possivel cancelar meetups que já passaram.' });

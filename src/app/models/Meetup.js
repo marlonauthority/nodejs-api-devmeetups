@@ -9,12 +9,12 @@ class Meetup extends Model {
         title: Sequelize.STRING,
         description: Sequelize.STRING,
         location: Sequelize.STRING,
-        date_hour: Sequelize.STRING,
+        date: Sequelize.STRING,
         // Campo virtual para mostrar quais já passaram da data
         past: {
           type: Sequelize.VIRTUAL,
           get() {
-            return isBefore(this.date_hour, new Date());
+            return isBefore(this.date, new Date());
           },
         },
       },
@@ -28,6 +28,7 @@ class Meetup extends Model {
   // Relacionamentos
   // -> Cria uma function statica que recebe Models
   static associate(models) {
+
     // Diz que Pertence a..(BelongTo)
     this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     this.belongsTo(models.File, { foreignKey: 'banner_id', as: 'banner' });

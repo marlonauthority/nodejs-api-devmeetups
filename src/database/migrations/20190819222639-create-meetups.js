@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      date_hour: {
+      date: {
         type: Sequelize.DATE,
         allowNull: false,
       },
